@@ -1,0 +1,18 @@
+// variables
+@port = 3000
+@baseUrl = http://localhost:{{port}}
+
+
+// Get all blogs
+GET {{baseUrl}}/api/blogs
+
+###
+// Post a new blogs
+POST {{baseUrl}}/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Problem Solving with Algorithms and Data Structures using Python",
+    "author": "Brad Miller",
+    "url": "https://runestone.academy/runestone/books/published/pythonds/index.html"
+}
