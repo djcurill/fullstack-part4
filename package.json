@@ -4,7 +4,7 @@
   "description": "blog list applications that allows users to save information about blogs they find interesting",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "dev": "nodemon index.js",
@@ -51,6 +51,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "jest": "^27.4.3",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.0",
     "typescript": "^4.5.2"
