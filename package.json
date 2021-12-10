@@ -4,11 +4,11 @@
   "description": "blog list applications that allows users to save information about blogs they find interesting",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose",
+    "test": "NODE_ENV=test jest --verbose",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "dev": "nodemon index.js",
-    "start": "node index.js"
+    "dev": "NODE_ENV=development nodemon index.js",
+    "start": "NODE_ENV=production node index.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
     "lodash": "^4.17.21",
     "mongoose": "^6.0.14",
     "morgan": "^1.10.0"
@@ -55,6 +56,7 @@
     "jest": "^27.4.3",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.0",
+    "supertest": "^6.1.6",
     "typescript": "^4.5.2"
   }
 }

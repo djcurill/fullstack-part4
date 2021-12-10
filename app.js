@@ -1,4 +1,5 @@
 const express = require('express');
+require('express-async-errors');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
@@ -18,7 +19,11 @@ mongoose
 
 app.use(express.json());
 app.use(cors());
-app.use(morgan('tiny'));
+app.use(
+  morgan('tiny', {
+    skip: (_req, res) => process.env.NODE_ENV === 'test',
+  })
+);
 app.use('/api/blogs', blogsRouter);
 app.use(middleware.errorHandler);
 app.use(middleware.unknownEndpoint);

@@ -66,8 +66,6 @@ const manyBlogs = [
   },
 ];
 
-console.log(mostLikes(manyBlogs));
-
 module.exports = {
   dummy,
   totalLikes,
