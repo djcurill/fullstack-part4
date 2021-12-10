@@ -16,3 +16,9 @@ Content-Type: application/json
     "author": "Brad Miller",
     "url": "https://runestone.academy/runestone/books/published/pythonds/index.html"
 }
+
+###
+DELETE {{baseUrl}}/api/blogs/61b3c44484db40e1b4abf92b
+
+###
+DELETE {{baseUrl}}/api/blogs/fail
