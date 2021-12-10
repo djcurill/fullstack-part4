@@ -22,3 +22,14 @@ DELETE {{baseUrl}}/api/blogs/61b3c44484db40e1b4abf92b
 
 ###
 DELETE {{baseUrl}}/api/blogs/fail
+
+###
+PUT {{baseUrl}}/api/blogs
+Content-Type: application/json
+
+{
+    "id": "61b3ceb6e1d98f6a8c1fd5dd",
+    "title": "Update",
+    "author": "Brad Miller",
+    "url": "https://runestone.academy/runestone/books/published/pythonds/index.html"
+}
