@@ -13,7 +13,10 @@ const middleware = require('./utils/middleware');
 const app = express();
 
 mongoose
-  .connect(config.MONGODB_URI, { useNewUrlParser: true })
+  .connect(config.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => logger.info('Connection successful'))
   .catch((error) =>
     logger.error('Error connection to MongoDb: ', error.message)
@@ -26,6 +29,7 @@ app.use(
     skip: (_req, res) => process.env.NODE_ENV === 'test',
   })
 );
+app.use(middleware.getToken);
 app.use('/api/login', loginRouter);
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', userRouter);

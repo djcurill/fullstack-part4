@@ -6,11 +6,13 @@ const errorHandler = (err, req, res, next) => {
   if (err.name === 'CastError')
     return res
       .status(400)
-      .send({ error: `Error casting ${err.path}: ${err.value}` });
+      .json({ error: `Error casting ${err.path}: ${err.value}` });
 
-  if (err.name === 'ValidationError') {
-    return res.status(400).send({ error: 'schema validation error' });
-  }
+  if (err.name === 'ValidationError')
+    return res.status(400).json({ error: 'schema validation error' });
+
+  if (err.name === 'JsonWebTokenError')
+    return res.status(401).json({ error: 'invalid token' });
 
   next(err);
 };
@@ -18,4 +20,15 @@ const errorHandler = (err, req, res, next) => {
 const unknownEndpoint = (req, res) =>
   res.status(404).send({ error: 'unknown endpoint' });
 
-module.exports = { errorHandler, unknownEndpoint };
+const getToken = (req, res, next) => {
+  const authorizationHeader = req.headers.authorization;
+
+  if (authorizationHeader !== undefined) {
+    const token = authorizationHeader.split(' ')[1];
+    req.token = token;
+  }
+
+  next();
+};
+
+module.exports = { errorHandler, unknownEndpoint, getToken };

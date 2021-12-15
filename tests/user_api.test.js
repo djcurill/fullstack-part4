@@ -1,7 +1,6 @@
 const supertest = require('supertest');
 const mongoose = require('mongoose');
 const User = require('../models/users');
-const Blog = require('../models/blog');
 const app = require('../app');
 const testHelper = require('./test_helper');
 
@@ -9,12 +8,8 @@ const api = supertest(app);
 
 describe('User API', () => {
   beforeEach(async () => {
-    await Blog.deleteMany({});
-    await User.deleteMany({});
-    const testUser = testHelper.initialUsers[0];
-    const newUser = await new User(testUser).save();
-    testHelper.initialBlogs.forEach((blog) => (blog.user = newUser._id));
-    await Blog.insertMany(testHelper.initialBlogs);
+    await testHelper.tearDownDb();
+    await testHelper.setUpDb();
   });
 
   describe('when there is initially a user in the db', () => {

@@ -62,6 +62,16 @@ const createBlogs = () => {
   return [blogOne, blogTwo];
 };
 
+const tearDownDb = async () => {
+  await User.deleteMany({});
+  await Blog.deleteMany({});
+};
+
+const setUpDb = async () => {
+  await User.insertMany(createUsers());
+  await Blog.insertMany(createBlogs());
+};
+
 const blogsInDb = async () => {
   const blogs = await Blog.find({});
   return blogs.map((blog) => blog.toJSON());
@@ -83,6 +93,6 @@ module.exports = {
   blogsInDb,
   usersInDb,
   findOne,
-  createUsers,
-  createBlogs,
+  setUpDb,
+  tearDownDb,
 };

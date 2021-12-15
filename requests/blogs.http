@@ -10,10 +10,12 @@ GET {{baseUrl}}/api/blogs
 // Post a new blogs
 POST {{baseUrl}}/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhbnVzIiwiaWQiOiI2MWI1NjgxMjIxYjc5YjA1ZjdkZmFkY2EiLCJpYXQiOjE2Mzk1OTE5MTV9.qnosEPy9vtvVVWTbF6vN3KYUFPZG37ryWWPu7-rfW4A
 
 {
-    "title": "Test no author",
-    "url": "fail.org"
+    "title": "JWT Bearer token authentication",
+    "url": "https://medium.com/ms-club-of-sliit/jwt-bearer-token-authentication-for-express-js-5e95bf4dead0",
+    "author": "Dinuwan Kalubowila"
 }
 
 ###
