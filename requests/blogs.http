@@ -12,9 +12,8 @@ POST {{baseUrl}}/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Problem Solving with Algorithms and Data Structures using Python",
-    "author": "Brad Miller",
-    "url": "https://runestone.academy/runestone/books/published/pythonds/index.html"
+    "title": "Test no author",
+    "url": "fail.org"
 }
 
 ###

@@ -1,0 +1,11 @@
+
+@port = 3000
+@baseUrl = http://localhost:{{port}}
+
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+    "username": "danus",
+    "password": "epicpassword"
+}

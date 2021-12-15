@@ -4,11 +4,11 @@
   "description": "blog list applications that allows users to save information about blogs they find interesting",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test jest --verbose",
-    "lint": "eslint .",
+    "test": "NODE_ENV=test jest --verbose --runInBand",
     "lint:fix": "eslint . --fix",
     "dev": "NODE_ENV=development nodemon index.js",
-    "start": "NODE_ENV=production node index.js"
+    "start": "NODE_ENV=production node index.js",
+    "debug:test": "NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand --verbose"
   },
   "repository": {
     "type": "git",
@@ -27,12 +27,15 @@
   },
   "homepage": "https://github.com/djcurill/fullstack-part4#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
-    "mongoose": "^6.0.14",
+    "mongoose": "^5.3.2",
+    "mongoose-unique-validator": "^2.0.1",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
