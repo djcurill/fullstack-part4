@@ -1,5 +1,6 @@
 const supertest = require('supertest');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const Blog = require('../models/blog');
 const app = require('../app');
@@ -122,6 +123,25 @@ describe('Blog API', () => {
         .send({ title: '400', userId: user._id.toString() })
         .expect(400);
     });
+
+    test('request with no token returns 401', async () => {
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/);
+    });
+
+    test('request with invalid token returns 401', async () => {
+      const invalidToken = jwt.sign({ fail: 'yes' }, process.env.SECRET);
+
+      await api
+        .post('/api/blogs')
+        .set('Authorization', `bearer ${invalidToken}`)
+        .send(newBlog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/);
+    });
   });
 
   describe('DELETE /api/blogs/:id', () => {
@@ -136,6 +156,9 @@ describe('Blog API', () => {
 
       const after = await testHelper.blogsInDb();
       expect(after).not.toContainEqual(blogToDelete);
+
+      const updatedUser = await User.findById(user._id);
+      expect(updatedUser.blogs).not.toContainEqual(blogToDelete._id);
     });
 
     test('given non-existing id api returns 404', async () => {

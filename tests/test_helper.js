@@ -9,29 +9,6 @@ const userIdTwo = '61bbfcfcb4d74a038cbb38bc';
 const blogIdOne = '61bad011180ab60beaeeb387';
 const blogIdTwo = '61bad01ad39cc5fe10f3c5f1';
 
-const initialBlogs = [
-  {
-    title: 'blog #1',
-    author: 'bob',
-    url: 'bob.loblaw',
-    likes: 5,
-  },
-  {
-    title: 'blog #2',
-    author: 'mary',
-    url: 'mary.scary',
-    likes: 7,
-  },
-];
-
-const initialUsers = [
-  {
-    username: 'testUser',
-    name: 'testerson',
-    password: 'secret',
-  },
-];
-
 const createUsers = () => {
   const userOne = new User({
     _id: userIdOne,

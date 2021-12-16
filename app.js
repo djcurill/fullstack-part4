@@ -30,6 +30,7 @@ app.use(
   })
 );
 app.use(middleware.getToken);
+app.use(middleware.getUser);
 app.use('/api/login', loginRouter);
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', userRouter);

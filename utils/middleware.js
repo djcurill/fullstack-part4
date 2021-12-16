@@ -1,4 +1,6 @@
+const jwt = require('jsonwebtoken');
 const logger = require('./logger');
+const User = require('../models/users');
 
 const errorHandler = (err, req, res, next) => {
   logger.error(err.message);
@@ -27,8 +29,21 @@ const getToken = (req, res, next) => {
     const token = authorizationHeader.split(' ')[1];
     req.token = token;
   }
-
   next();
 };
 
-module.exports = { errorHandler, unknownEndpoint, getToken };
+const getUser = async (req, res, next) => {
+  if (req.token !== undefined) {
+    const decodedToken = jwt.verify(req.token, process.env.SECRET);
+    if (!decodedToken.id)
+      return res.status(401).json({ error: 'Invalid token' });
+
+    const user = await User.findById(decodedToken.id);
+    if (user === null) return res.status(404).send('User not found');
+
+    req.user = user;
+  }
+  next();
+};
+
+module.exports = { errorHandler, unknownEndpoint, getToken, getUser };
