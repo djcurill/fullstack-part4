@@ -28,7 +28,6 @@ blogsRouter.post('/', async (req, res) => {
 });
 
 blogsRouter.delete('/:id', async (req, res) => {
-  // update user post delete
   const { id } = req.params;
   const { user } = req;
 
@@ -50,9 +49,30 @@ blogsRouter.delete('/:id', async (req, res) => {
 });
 
 blogsRouter.put('/', async (req, res) => {
-  const blog = req.body;
-  const result = await Blog.findByIdAndUpdate(blog.id, blog, { new: true });
-  if (result === null) return res.status(404).send('Not found');
+  const { body, user } = req;
+
+  if (!user) return res.status(401).send('Authentication token missing');
+
+  if (!body.id) return res.status(400).send('Invalid post, missing blog id');
+
+  const blog = await Blog.findById(body.id);
+  if (!blog) return res.status(404).send('Not found');
+
+  if (blog.user._id.toString() !== user._id.toString())
+    return res.status(401).send('Unauthorized action');
+
+  const updatedBlog = new Blog({
+    _id: blog._id,
+    title: body.title,
+    author: body.author,
+    likes: body.likes,
+    user: user._id,
+  });
+
+  const result = await Blog.findByIdAndUpdate(body.id, updatedBlog, {
+    new: true,
+  });
+
   return res.status(200).json(result);
 });
 

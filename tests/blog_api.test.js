@@ -171,24 +171,52 @@ describe('Blog API', () => {
   });
 
   describe('PUT /api/blogs/', () => {
-    test('given existing blog, blog is updated', async () => {
-      const blog = (await testHelper.blogsInDb())[0];
+    test('given existing blog, blog is updated by user', async () => {
+      const { user, token } = await setUpExistingUser();
+      const blog = (await Blog.findOne({ user: user._id })).toJSON();
+
       blog.title = 'incoming updated title';
       const result = await api
         .put('/api/blogs')
+        .set('Authorization', `bearer ${token}`)
         .send(blog)
         .expect(200)
         .expect('Content-Type', /application\/json/);
       expect(result.body.title).toEqual(blog.title);
     });
 
+    test('user cannot update blog that is not their own', async () => {
+      const user = await User.findById(testHelper.userIdTwo);
+
+      const token = testHelper.generateTokenFromUser(
+        user._id.toString(),
+        user.userName
+      );
+
+      const existingBlog = (
+        await Blog.findOne({ user: testHelper.userIdOne })
+      ).toJSON();
+
+      await api
+        .put('/api/blogs')
+        .set('Authorization', `bearer ${token}`)
+        .send(existingBlog)
+        .expect(401);
+    });
+
     test('given non-existing blog, no update occurs', async () => {
+      const { user, token } = await setUpExistingUser();
       const fakeBlog = {
         id: '61b3cec497d8bb747cd25c7f', // non existing id
         title: 'I do not',
         author: 'exist',
+        user: user._id,
       };
-      await api.put('/api/blogs').send(fakeBlog).expect(404);
+      await api
+        .put('/api/blogs')
+        .set('Authorization', `bearer ${token}`)
+        .send(fakeBlog)
+        .expect(404);
     });
   });
 

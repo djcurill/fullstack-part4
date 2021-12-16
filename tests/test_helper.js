@@ -84,4 +84,6 @@ module.exports = {
   setUpDb,
   tearDownDb,
   generateTokenFromUser,
+  userIdOne,
+  userIdTwo,
 };
