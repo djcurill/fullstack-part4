@@ -1,6 +1,7 @@
 const supertest = require('supertest');
 const mongoose = require('mongoose');
 const User = require('../models/users');
+const Blog = require('../models/blog');
 const app = require('../app');
 const testHelper = require('./test_helper');
 
@@ -11,6 +12,15 @@ describe('Blog API', () => {
     await testHelper.tearDownDb();
     await testHelper.setUpDb();
   });
+
+  const setUpExistingUser = async () => {
+    const existingUser = (await User.find({}))[0];
+    const token = testHelper.generateTokenFromUser(
+      existingUser._id.toString(),
+      existingUser.userName
+    );
+    return { user: existingUser, token };
+  };
 
   describe('GET /api/blogs', () => {
     test('valid get returns 200 & json', async () => {
@@ -45,44 +55,48 @@ describe('Blog API', () => {
     };
 
     test('valid blog is added to db', async () => {
-      const existingUser = (await User.find({}))[0];
-      newBlog.userId = existingUser._id.toString();
+      const { user, token } = await setUpExistingUser();
 
       await api
         .post('/api/blogs')
+        .set('Authorization', `bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/);
 
-      const blogsAfterPost = await testHelper.blogsInDb();
-      expect(blogsAfterPost.map((blog) => blog.title)).toContainEqual(
-        newBlog.title
-      );
-      expect(blogsAfterPost.map((blog) => blog.author)).toContainEqual(
-        newBlog.author
-      );
-      expect(blogsAfterPost.length).toBe(testHelper.initialBlogs.length + 1);
+      const postedBlog = await Blog.findOne({
+        title: newBlog.title,
+        author: newBlog.author,
+      });
+
+      expect(postedBlog).toBeTruthy();
+      expect(postedBlog.title).toBe(newBlog.title);
+      expect(postedBlog.author).toBe(newBlog.author);
+      expect(postedBlog.user).toEqual(user._id);
     });
 
     test('invalid blog returns 400', async () => {
-      const existingUser = (await User.find({}))[0];
-      invalidBlog.userId = existingUser._id.toString();
+      const { token } = await setUpExistingUser();
+      const before = await testHelper.blogsInDb();
+      await api
+        .post('/api/blogs')
+        .set('Authorization', `bearer ${token}`)
+        .send(invalidBlog)
+        .expect(400);
 
-      await api.post('/api/blogs').send(invalidBlog).expect(400);
-
-      const blogsAfterPost = await testHelper.blogsInDb();
-      expect(blogsAfterPost.length).toBe(testHelper.initialBlogs.length);
+      const after = await testHelper.blogsInDb();
+      expect(after.length).toBe(before.length);
     });
 
     test('new note with undefined likes defaults to 0', async () => {
-      const existingUser = (await User.find({}))[0];
+      const { token } = await setUpExistingUser();
 
       await api
         .post('/api/blogs')
+        .set('Authorization', `bearer ${token}`)
         .send({
           title: 'no likes',
           author: 'nobody',
-          userId: existingUser._id.toString(),
         })
         .expect(201)
         .expect('Content-Type', /application\/json/);
@@ -92,35 +106,44 @@ describe('Blog API', () => {
     });
 
     test('new blog with missing title returns 400', async () => {
-      const existingUser = (await User.find({}))[0];
+      const { user, token } = await setUpExistingUser();
       await api
         .post('/api/blogs')
-        .send({ author: '400', userId: existingUser._id.toString() })
+        .set('Authorization', `bearer ${token}`)
+        .send({ author: '400', userId: user._id.toString() })
         .expect(400);
     });
 
     test('new blog with missing author returns 400', async () => {
-      const existingUser = (await User.find({}))[0];
+      const { user, token } = await setUpExistingUser();
       await api
         .post('/api/blogs')
-        .send({ title: '400', userId: existingUser._id.toString() })
+        .set('Authorization', `bearer ${token}`)
+        .send({ title: '400', userId: user._id.toString() })
         .expect(400);
     });
   });
 
   describe('DELETE /api/blogs/:id', () => {
     test('given valid id blog is deleted', async () => {
-      const before = await testHelper.blogsInDb();
-      const blogToDelete = before[0];
+      const { user, token } = await setUpExistingUser();
+      const blogToDelete = await Blog.findOne({ user: user._id });
 
-      await api.delete(`/api/blogs/${blogToDelete.id}`).expect(200);
+      await api
+        .delete(`/api/blogs/${blogToDelete._id.toString()}`)
+        .set('Authorization', `bearer ${token}`)
+        .expect(200);
 
       const after = await testHelper.blogsInDb();
       expect(after).not.toContainEqual(blogToDelete);
     });
 
     test('given non-existing id api returns 404', async () => {
-      await api.delete(`/api/blogs/61b3c6caa7df69784a7867f6`).expect(404);
+      const { token } = await setUpExistingUser();
+      await api
+        .delete(`/api/blogs/61b3c6caa7df69784a7867f6`)
+        .set('Authorization', `bearer ${token}`)
+        .expect(404);
     });
   });
 

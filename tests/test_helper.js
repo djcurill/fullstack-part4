@@ -1,8 +1,10 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const Blog = require('../models/blog');
 const User = require('../models/users');
 
 const userIdOne = '61bacefd5184324d03eb5996';
+const userIdTwo = '61bbfcfcb4d74a038cbb38bc';
 
 const blogIdOne = '61bad011180ab60beaeeb387';
 const blogIdTwo = '61bad01ad39cc5fe10f3c5f1';
@@ -38,7 +40,15 @@ const createUsers = () => {
     passwordHash: bcrypt.hashSync('secret', 10),
     blogs: [blogIdOne, blogIdTwo],
   });
-  return [userOne];
+
+  const userTwo = new User({
+    _id: userIdTwo,
+    userName: 'newUser',
+    name: 'newbie',
+    passwordHash: bcrypt.hashSync('password', 10),
+    blogs: [],
+  });
+  return [userOne, userTwo];
 };
 
 const createBlogs = () => {
@@ -87,12 +97,14 @@ const findOne = async (query) => {
   return blog.toJSON();
 };
 
+const generateTokenFromUser = (id, username) =>
+  jwt.sign({ id, username }, process.env.SECRET);
+
 module.exports = {
-  initialUsers,
-  initialBlogs,
   blogsInDb,
   usersInDb,
   findOne,
   setUpDb,
   tearDownDb,
+  generateTokenFromUser,
 };

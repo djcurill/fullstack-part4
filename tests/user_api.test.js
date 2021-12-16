@@ -56,11 +56,11 @@ describe('User API', () => {
         username: 'fail',
         name: 'fast',
       };
-
+      const before = await testHelper.usersInDb();
       await api.post('/api/users').send(invalidUser).expect(400);
 
-      const users = await testHelper.usersInDb();
-      expect(users.length).toBe(testHelper.initialUsers.length);
+      const after = await testHelper.usersInDb();
+      expect(after.length).toBe(before.length);
     });
 
     test('create new user with missing username returns 400', async () => {
@@ -68,11 +68,11 @@ describe('User API', () => {
         password: 'fail',
         name: 'fast',
       };
-
+      const before = await testHelper.usersInDb();
       await api.post('/api/users').send(invalidUser).expect(400);
 
-      const users = await testHelper.usersInDb();
-      expect(users.length).toBe(testHelper.initialUsers.length);
+      const after = await testHelper.usersInDb();
+      expect(after.length).toBe(before.length);
     });
 
     test('username less than 3 characters returns 400', async () => {
@@ -81,11 +81,11 @@ describe('User API', () => {
         password: 'fail',
         name: 'fast',
       };
-
+      const before = await testHelper.usersInDb();
       await api.post('/api/users').send(invalidUser).expect(400);
 
-      const users = await testHelper.usersInDb();
-      expect(users.length).toBe(testHelper.initialUsers.length);
+      const after = await testHelper.usersInDb();
+      expect(after.length).toBe(before.length);
     });
 
     test('password less than 3 characters returns 400', async () => {
@@ -94,11 +94,11 @@ describe('User API', () => {
         password: 'no',
         name: 'epic',
       };
-
+      const before = await testHelper.usersInDb();
       await api.post('/api/users').send(invalidUser).expect(400);
 
-      const users = await testHelper.usersInDb();
-      expect(users.length).toBe(testHelper.initialUsers.length);
+      const after = await testHelper.usersInDb();
+      expect(after.length).toBe(before.length);
     });
   });
 
