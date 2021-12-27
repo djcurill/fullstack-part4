@@ -185,25 +185,6 @@ describe('Blog API', () => {
       expect(result.body.title).toEqual(blog.title);
     });
 
-    test('user cannot update blog that is not their own', async () => {
-      const user = await User.findById(testHelper.userIdTwo);
-
-      const token = testHelper.generateTokenFromUser(
-        user._id.toString(),
-        user.userName
-      );
-
-      const existingBlog = (
-        await Blog.findOne({ user: testHelper.userIdOne })
-      ).toJSON();
-
-      await api
-        .put('/api/blogs')
-        .set('Authorization', `bearer ${token}`)
-        .send(existingBlog)
-        .expect(401);
-    });
-
     test('given non-existing blog, no update occurs', async () => {
       const { user, token } = await setUpExistingUser();
       const fakeBlog = {

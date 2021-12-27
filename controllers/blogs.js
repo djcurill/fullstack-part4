@@ -58,9 +58,6 @@ blogsRouter.put('/', async (req, res) => {
   const blog = await Blog.findById(body.id);
   if (!blog) return res.status(404).send('Not found');
 
-  if (blog.user._id.toString() !== user._id.toString())
-    return res.status(401).send('Unauthorized action');
-
   const updatedBlog = new Blog({
     _id: blog._id,
     title: body.title,

@@ -20,7 +20,7 @@ userRouter.post('/', async (req, res) => {
   const passwordHash = await bcrypt.hash(body.password, saltRounds);
 
   const user = new User({
-    userName: body.username,
+    username: body.username,
     name: body.name,
     passwordHash,
   });

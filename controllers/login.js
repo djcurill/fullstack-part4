@@ -9,7 +9,7 @@ loginRouter.post('/', async (req, res) => {
   if (body.password === undefined || body.username === undefined)
     return res.status(400).send('Missing username and/or password');
 
-  const user = await User.findOne({ userName: body.username });
+  const user = await User.findOne({ username: body.username });
 
   if (user === null)
     return res.status(401).send('Username login does not exist');
@@ -18,10 +18,10 @@ loginRouter.post('/', async (req, res) => {
   if (!passwordCheck)
     return res
       .status(401)
-      .send(`Invalid password for username: ${user.userName}`);
+      .send(`Invalid password for username: ${user.username}`);
 
   const signature = {
-    username: user.userName,
+    username: user.username,
     id: user._id,
   };
 
@@ -29,7 +29,7 @@ loginRouter.post('/', async (req, res) => {
 
   return res
     .status(200)
-    .send({ token, username: user.userName, name: user.name });
+    .send({ token, username: user.username, name: user.name });
 });
 
 module.exports = loginRouter;

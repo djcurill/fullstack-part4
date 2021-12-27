@@ -12,7 +12,7 @@ const blogIdTwo = '61bad01ad39cc5fe10f3c5f1';
 const createUsers = () => {
   const userOne = new User({
     _id: userIdOne,
-    userName: 'testUser',
+    username: 'testUser',
     name: 'testerson',
     passwordHash: bcrypt.hashSync('secret', 10),
     blogs: [blogIdOne, blogIdTwo],
@@ -20,7 +20,7 @@ const createUsers = () => {
 
   const userTwo = new User({
     _id: userIdTwo,
-    userName: 'newUser',
+    username: 'newUser',
     name: 'newbie',
     passwordHash: bcrypt.hashSync('password', 10),
     blogs: [],

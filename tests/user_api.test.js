@@ -31,7 +31,7 @@ describe('User API', () => {
       const after = await testHelper.usersInDb();
       expect(after.length - before.length).toBe(1);
 
-      const usernames = after.map((user) => user.userName);
+      const usernames = after.map((user) => user.username);
       expect(usernames).toContain('testo');
     });
 

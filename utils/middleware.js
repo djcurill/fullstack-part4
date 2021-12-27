@@ -24,7 +24,6 @@ const unknownEndpoint = (req, res) =>
 
 const getToken = (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
-
   if (authorizationHeader !== undefined) {
     const token = authorizationHeader.split(' ')[1];
     req.token = token;
@@ -33,6 +32,7 @@ const getToken = (req, res, next) => {
 };
 
 const getUser = async (req, res, next) => {
+  console.log(req.token);
   if (req.token !== undefined) {
     const decodedToken = jwt.verify(req.token, process.env.SECRET);
     if (!decodedToken.id)
