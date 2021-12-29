@@ -8,7 +8,8 @@
     "lint:fix": "eslint . --fix",
     "dev": "NODE_ENV=development nodemon index.js",
     "start": "NODE_ENV=production node index.js",
-    "debug:test": "NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand --verbose"
+    "debug:test": "NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand --verbose",
+    "start:test": "NODE_ENV=test node index.js"
   },
   "repository": {
     "type": "git",
