@@ -9,6 +9,7 @@ const loginRouter = require('./controllers/login');
 const logger = require('./utils/logger');
 const config = require('./utils/config');
 const middleware = require('./utils/middleware');
+const resetRouter = require('./controllers/reset');
 
 const app = express();
 
@@ -34,6 +35,9 @@ app.use(middleware.getUser);
 app.use('/api/login', loginRouter);
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', userRouter);
+
+if (process.env.NODE_ENV === 'test') app.use('/test/reset', resetRouter);
+
 app.use(middleware.errorHandler);
 app.use(middleware.unknownEndpoint);
 

@@ -32,7 +32,6 @@ const getToken = (req, res, next) => {
 };
 
 const getUser = async (req, res, next) => {
-  console.log(req.token);
   if (req.token !== undefined) {
     const decodedToken = jwt.verify(req.token, process.env.SECRET);
     if (!decodedToken.id)
